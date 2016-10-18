@@ -1,3 +1,6 @@
+# ===== Custom.gitignore ===== #
+feeds
+
 # ===== Global/Linux.gitignore ===== #
 *~
 

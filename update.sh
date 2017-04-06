@@ -51,7 +51,7 @@ WGET_URLS='/tmp/docsets_url'
 grep "http://london\..*\.tgz" ./**/*.xml -o --no-filename > "$WGET_URLS"
 
 # Download the archives and extract them to proper docsets directory
-cd "${1='/tmp/'}" && \
-	wget --continue -i "$WGET_URLS"
+#cd "${1='/tmp/'}" && \
+#	wget --continue -i "$WGET_URLS"
 #&& \
 #	tar xzf ./*.tgz -C "$HOME/.local/share/Zeal/Zeal/docsets/"

@@ -5,9 +5,9 @@ CONTRIB_FEED='http://sanfrancisco.kapeli.com/feeds/zzz/user_contributed/build/in
 
 # Update the INBUILT_FEED from upstream
 if [ -d "$(basename "$INBUILT_FEED")" ]; then
-	cd "$(basename "$INBUILT_FEED")" && git checkout master && git pull && cd ..
+    cd "$(basename "$INBUILT_FEED")" && git checkout master && git pull && cd ..
 else
-	git clone "$INBUILT_FEED"
+    git clone "$INBUILT_FEED"
 fi
 
 # Update the CONTRIB_FEED from upstream
@@ -29,21 +29,26 @@ wget -qO - "$CONTRIB_FEED" | \
                                  print "<url>http://tokyo.kapeli.com/feeds/zzz/user_contributed/build/" nm "/" ar "</url>" >> of
                                  print "<url>http://sydney.kapeli.com/feeds/zzz/user_contributed/build/" nm "/" ar "</url>" >> of
                                  print "</entry>" >> of
+                                 close(of)
                                  ar = ""; vr = ""; nm = ""; next ;
                                }'
 
 # Remove duplicate files and keep only the more recent versions
-rm CouchDB.xml Julia.xml Phalcon.xml
+DUPLICATED_FILES=( $(find . -type f -name "*.xml" -printf "%f\n" | sort | uniq -d) )
+
+for file in "${DUPLICATED_FILES[@]}"; do
+    rm "$file"
+done
 
 # This is bound to have some errors
 # Detect erroneous files
 
 # Get all files that have malformed URLs
-MALFORMED_FILES=$(grep -L "http://.*\.tgz" ./*.xml)
+MALFORMED_FILES=( $(grep -L "http://.*\.tgz" ./*.xml) )
 
 # Fix MALFORMED_FILES using some regex magic (need to make this better and not look stupid)
-for file in $MALFORMED_FILES; do
-	vim "$file" -u ./.vimrc  +'call FixFileUrl()' +wq
+for file in "${MALFORMED_FILES[@]}"; do
+    vim "$file" -u ./.vimrc  +'call FixFileUrl()' +wq
 done
 
 # Extract URLs from all files and creat a wget input file
@@ -52,6 +57,6 @@ grep "http://london\..*\.tgz" ./**/*.xml -o --no-filename > "$WGET_URLS"
 
 # Download the archives and extract them to proper docsets directory
 #cd "${1='/tmp/'}" && \
-#	wget --continue -i "$WGET_URLS"
+#    wget --continue -i "$WGET_URLS"
 #&& \
-#	tar xzf ./*.tgz -C "$HOME/.local/share/Zeal/Zeal/docsets/"
+#    tar xzf ./*.tgz -C "$HOME/.local/share/Zeal/Zeal/docsets/"

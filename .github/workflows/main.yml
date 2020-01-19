@@ -1,0 +1,13 @@
+name: Auto-Update
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+
+jobs:
+  build:
+    name: Auto-Update
+    runs-on: ubuntu-latest
+    steps:
+      - name: update.sh
+        run: ./update.sh

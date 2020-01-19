@@ -2,12 +2,22 @@ name: Auto-Update
 
 on:
   schedule:
-    - cron: "0 0 * * 1"
+    - cron: "*/5 * * * *"
 
 jobs:
   build:
     name: Auto-Update
     runs-on: ubuntu-latest
     steps:
-      - name: update.sh
-        run: ./update.sh
+    - uses: actions/checkout@v2
+    - name: Create local changes
+      run: |
+        ./update.sh
+    - name: Commit files
+      run: |
+        git config --local user.email "hashhar_dev@outlook.com"
+        git config --local user.name "Ashhar Hasan"
+        git commit -m "Synced on $(date -I)" -a
+    - name: Push changes
+      run: |
+        git push

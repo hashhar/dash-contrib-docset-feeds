@@ -17,7 +17,7 @@ jobs:
       run: |
         git config --local user.email "hashhar_dev@outlook.com"
         git config --local user.name "Ashhar Hasan"
-        git commit -m "Synced on $(date -I)" -a
+        git diff --quiet && git diff --staged --quiet || git commit -m "Synced on $(date -I)" -a
     - name: Push changes
       run: |
         git push
